@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.550">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Computational Tools for Macroeconometrics</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="comptools_ass1_files/libs/clipboard/clipboard.min.js"></script>
+<script src="comptools_ass1_files/libs/quarto-html/quarto.js"></script>
+<script src="comptools_ass1_files/libs/quarto-html/popper.min.js"></script>
+<script src="comptools_ass1_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="comptools_ass1_files/libs/quarto-html/anchor.min.js"></script>
+<link href="comptools_ass1_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="comptools_ass1_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="comptools_ass1_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="comptools_ass1_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="comptools_ass1_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Computational Tools for Macroeconometrics</h1>
+<p class="subtitle lead">Assignment 1</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>This assignment introduces students to practical and theoretical aspects of macroeconometrics, focusing on forecasting using the FRED-MD dataset. Students will learn to handle macroeconomic data, perform necessary transformations, apply univariate models to predict key economic indicators and to evaluate these forecasts.</p>
+</section>
+<section id="the-fred-md-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="the-fred-md-dataset">The FRED-MD dataset</h2>
+<p>The FRED-MD dataset is a comprehensive monthly database for macroeconomic research compiled by the Federal Reserve Bank of St.&nbsp;Louis. It features a wide array of economic indicators. The list of economic indicators can be obtained from the paper accompanying the data <a href="">pdf</a>.</p>
+<p>The data can be downloaded <a href="https://research.stlouisfed.org/econ/mccracken/fred-databases/">here</a>. The page contains all the different vintages of the data.</p>
+<p>Let us start to download the <code>current.csv</code> file:</p>
+<div id="ae883fb6" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the dataset</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'~/Downloads/current.csv'</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean the DataFrame by removing the row with transformation codes</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>df_cleaned <span class="op">=</span> df.drop(index<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>df_cleaned.reset_index(drop<span class="op">=</span><span class="va">True</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>df_cleaned</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">sasdate</th>
+<th data-quarto-table-cell-role="th">RPI</th>
+<th data-quarto-table-cell-role="th">W875RX1</th>
+<th data-quarto-table-cell-role="th">DPCERA3M086SBEA</th>
+<th data-quarto-table-cell-role="th">CMRMTSPLx</th>
+<th data-quarto-table-cell-role="th">RETAILx</th>
+<th data-quarto-table-cell-role="th">INDPRO</th>
+<th data-quarto-table-cell-role="th">IPFPNSS</th>
+<th data-quarto-table-cell-role="th">IPFINAL</th>
+<th data-quarto-table-cell-role="th">IPCONGD</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">DNDGRG3M086SBEA</th>
+<th data-quarto-table-cell-role="th">DSERRG3M086SBEA</th>
+<th data-quarto-table-cell-role="th">CES0600000008</th>
+<th data-quarto-table-cell-role="th">CES2000000008</th>
+<th data-quarto-table-cell-role="th">CES3000000008</th>
+<th data-quarto-table-cell-role="th">UMCSENTx</th>
+<th data-quarto-table-cell-role="th">DTCOLNVHFNM</th>
+<th data-quarto-table-cell-role="th">DTCTHFNM</th>
+<th data-quarto-table-cell-role="th">INVEST</th>
+<th data-quarto-table-cell-role="th">VIXCLSx</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1/1/1959</td>
+<td>2583.560</td>
+<td>2426.0</td>
+<td>15.188</td>
+<td>2.766768e+05</td>
+<td>18235.77392</td>
+<td>21.9665</td>
+<td>23.3891</td>
+<td>22.2688</td>
+<td>31.7011</td>
+<td>...</td>
+<td>18.294</td>
+<td>10.152</td>
+<td>2.13</td>
+<td>2.45</td>
+<td>2.04</td>
+<td>NaN</td>
+<td>6476.00</td>
+<td>12298.00</td>
+<td>84.2043</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2/1/1959</td>
+<td>2593.596</td>
+<td>2434.8</td>
+<td>15.346</td>
+<td>2.787140e+05</td>
+<td>18369.56308</td>
+<td>22.3966</td>
+<td>23.7048</td>
+<td>22.4617</td>
+<td>31.9337</td>
+<td>...</td>
+<td>18.302</td>
+<td>10.167</td>
+<td>2.14</td>
+<td>2.46</td>
+<td>2.05</td>
+<td>NaN</td>
+<td>6476.00</td>
+<td>12298.00</td>
+<td>83.5280</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3/1/1959</td>
+<td>2610.396</td>
+<td>2452.7</td>
+<td>15.491</td>
+<td>2.777753e+05</td>
+<td>18523.05762</td>
+<td>22.7193</td>
+<td>23.8483</td>
+<td>22.5719</td>
+<td>31.9337</td>
+<td>...</td>
+<td>18.289</td>
+<td>10.185</td>
+<td>2.15</td>
+<td>2.45</td>
+<td>2.07</td>
+<td>NaN</td>
+<td>6508.00</td>
+<td>12349.00</td>
+<td>81.6405</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>4/1/1959</td>
+<td>2627.446</td>
+<td>2470.0</td>
+<td>15.435</td>
+<td>2.833627e+05</td>
+<td>18534.46600</td>
+<td>23.2032</td>
+<td>24.1927</td>
+<td>22.9026</td>
+<td>32.4374</td>
+<td>...</td>
+<td>18.300</td>
+<td>10.221</td>
+<td>2.16</td>
+<td>2.47</td>
+<td>2.08</td>
+<td>NaN</td>
+<td>6620.00</td>
+<td>12484.00</td>
+<td>81.8099</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>5/1/1959</td>
+<td>2642.720</td>
+<td>2486.4</td>
+<td>15.622</td>
+<td>2.853072e+05</td>
+<td>18679.66354</td>
+<td>23.5528</td>
+<td>24.3936</td>
+<td>23.1231</td>
+<td>32.5925</td>
+<td>...</td>
+<td>18.280</td>
+<td>10.238</td>
+<td>2.17</td>
+<td>2.48</td>
+<td>2.08</td>
+<td>95.3</td>
+<td>6753.00</td>
+<td>12646.00</td>
+<td>80.7315</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">776</td>
+<td>9/1/2023</td>
+<td>19111.748</td>
+<td>15741.9</td>
+<td>116.594</td>
+<td>1.507530e+06</td>
+<td>705304.00000</td>
+<td>103.2096</td>
+<td>101.0935</td>
+<td>101.3665</td>
+<td>102.1034</td>
+<td>...</td>
+<td>120.395</td>
+<td>123.976</td>
+<td>29.90</td>
+<td>34.55</td>
+<td>26.62</td>
+<td>67.9</td>
+<td>508808.61</td>
+<td>913938.95</td>
+<td>5074.6108</td>
+<td>15.0424</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">777</td>
+<td>10/1/2023</td>
+<td>19145.402</td>
+<td>15784.6</td>
+<td>116.663</td>
+<td>1.505477e+06</td>
+<td>703528.00000</td>
+<td>102.3722</td>
+<td>100.5292</td>
+<td>100.5527</td>
+<td>101.1664</td>
+<td>...</td>
+<td>120.040</td>
+<td>124.228</td>
+<td>29.97</td>
+<td>34.67</td>
+<td>26.65</td>
+<td>63.8</td>
+<td>513229.64</td>
+<td>918210.64</td>
+<td>5015.5456</td>
+<td>19.0462</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">778</td>
+<td>11/1/2023</td>
+<td>19213.108</td>
+<td>15859.9</td>
+<td>117.127</td>
+<td>1.514733e+06</td>
+<td>703336.00000</td>
+<td>102.6710</td>
+<td>100.9362</td>
+<td>101.2159</td>
+<td>101.8557</td>
+<td>...</td>
+<td>119.325</td>
+<td>124.551</td>
+<td>30.26</td>
+<td>34.96</td>
+<td>26.89</td>
+<td>61.3</td>
+<td>517434.30</td>
+<td>922552.40</td>
+<td>4999.7208</td>
+<td>13.8563</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">779</td>
+<td>12/1/2023</td>
+<td>19251.946</td>
+<td>15899.0</td>
+<td>117.773</td>
+<td>1.530296e+06</td>
+<td>706180.00000</td>
+<td>102.6715</td>
+<td>100.8332</td>
+<td>101.2843</td>
+<td>101.9884</td>
+<td>...</td>
+<td>119.193</td>
+<td>124.917</td>
+<td>30.45</td>
+<td>35.01</td>
+<td>27.14</td>
+<td>69.7</td>
+<td>522366.13</td>
+<td>928336.14</td>
+<td>5077.4222</td>
+<td>12.6960</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">780</td>
+<td>1/1/2024</td>
+<td>19377.558</td>
+<td>15948.8</td>
+<td>117.639</td>
+<td>NaN</td>
+<td>700291.00000</td>
+<td>102.5739</td>
+<td>100.9984</td>
+<td>101.7258</td>
+<td>102.6235</td>
+<td>...</td>
+<td>118.745</td>
+<td>125.662</td>
+<td>30.56</td>
+<td>35.21</td>
+<td>27.22</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>5105.3504</td>
+<td>13.3453</td>
+</tr>
+</tbody>
+</table>
+
+<p>781 rows × 128 columns</p>
+</div>
+</div>
+</div>
+</div>
+<div id="c9fba8ce" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract transformation codes</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>transformation_codes <span class="op">=</span> df.iloc[<span class="dv">0</span>, <span class="dv">1</span>:].to_frame().reset_index()</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>transformation_codes.columns <span class="op">=</span> [<span class="st">'Series'</span>, <span class="st">'Transformation_Code'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The transformation codes map variables to transformations we must apply to the data to render them (approximately) stationary. In the first column, the data frame <code>transformation_codes</code> has the variable’s name and its transformation (second column). There are six possible type of transformation:</p>
+<ul>
+<li><code>transformation_code=1</code>: no trasformation</li>
+<li><code>transformation_code=2</code>: <span class="math inline">\(\Delta x_t\)</span></li>
+<li><code>transformation_code=3</code>: <span class="math inline">\(\Delta^2 x_t\)</span></li>
+<li><code>transformation_code=4</code>: <span class="math inline">\(log(x_t)\)</span></li>
+<li><code>transformation_code=5</code>: <span class="math inline">\(\Delta log(x_t)\)</span></li>
+<li><code>transformation_code=6</code>: <span class="math inline">\(\Delta^2 log(x_t)\)</span></li>
+<li><code>transformation_code=7</code>: <span class="math inline">\(\Delta (x_t/x_{t-1} - 1)\)</span></li>
+</ul>
+<p>We can apply these trasformations using the following code:</p>
+<div id="897e0046" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to apply transformations based on the transformation code</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> apply_transformation(series, code):</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> code <span class="op">==</span> <span class="dv">1</span>:</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="co"># No transformation</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> series</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> code <span class="op">==</span> <span class="dv">2</span>:</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># First difference</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> series.diff()</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> code <span class="op">==</span> <span class="dv">3</span>:</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Second difference</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> series.diff().diff()</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> code <span class="op">==</span> <span class="dv">4</span>:</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Log</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.log(series)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> code <span class="op">==</span> <span class="dv">5</span>:</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># First difference of log</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.log(series).diff()</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> code <span class="op">==</span> <span class="dv">6</span>:</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Second difference of log</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.log(series).diff().diff()</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> code <span class="op">==</span> <span class="dv">7</span>:</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Delta (x_t/x_{t-1} - 1)</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> series.pct_change()</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">"Invalid transformation code"</span>)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Applying the transformations to each column in df_cleaned based on transformation_codes</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> series_name, code <span class="kw">in</span> transformation_codes.values:</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    df_cleaned[series_name] <span class="op">=</span> apply_transformation(df_cleaned[series_name].astype(<span class="bu">float</span>), <span class="bu">float</span>(code))</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>df_cleaned.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">sasdate</th>
+<th data-quarto-table-cell-role="th">RPI</th>
+<th data-quarto-table-cell-role="th">W875RX1</th>
+<th data-quarto-table-cell-role="th">DPCERA3M086SBEA</th>
+<th data-quarto-table-cell-role="th">CMRMTSPLx</th>
+<th data-quarto-table-cell-role="th">RETAILx</th>
+<th data-quarto-table-cell-role="th">INDPRO</th>
+<th data-quarto-table-cell-role="th">IPFPNSS</th>
+<th data-quarto-table-cell-role="th">IPFINAL</th>
+<th data-quarto-table-cell-role="th">IPCONGD</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">DNDGRG3M086SBEA</th>
+<th data-quarto-table-cell-role="th">DSERRG3M086SBEA</th>
+<th data-quarto-table-cell-role="th">CES0600000008</th>
+<th data-quarto-table-cell-role="th">CES2000000008</th>
+<th data-quarto-table-cell-role="th">CES3000000008</th>
+<th data-quarto-table-cell-role="th">UMCSENTx</th>
+<th data-quarto-table-cell-role="th">DTCOLNVHFNM</th>
+<th data-quarto-table-cell-role="th">DTCTHFNM</th>
+<th data-quarto-table-cell-role="th">INVEST</th>
+<th data-quarto-table-cell-role="th">VIXCLSx</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1/1/1959</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>...</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2/1/1959</td>
+<td>0.003877</td>
+<td>0.003621</td>
+<td>0.010349</td>
+<td>0.007336</td>
+<td>0.007310</td>
+<td>0.019391</td>
+<td>0.013407</td>
+<td>0.008625</td>
+<td>0.00731</td>
+<td>...</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3/1/1959</td>
+<td>0.006457</td>
+<td>0.007325</td>
+<td>0.009404</td>
+<td>-0.003374</td>
+<td>0.008321</td>
+<td>0.014306</td>
+<td>0.006035</td>
+<td>0.004894</td>
+<td>0.00000</td>
+<td>...</td>
+<td>-0.001148</td>
+<td>0.000292</td>
+<td>-0.000022</td>
+<td>-0.008147</td>
+<td>0.004819</td>
+<td>NaN</td>
+<td>0.004929</td>
+<td>0.004138</td>
+<td>-0.014792</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>4/1/1959</td>
+<td>0.006510</td>
+<td>0.007029</td>
+<td>-0.003622</td>
+<td>0.019915</td>
+<td>0.000616</td>
+<td>0.021075</td>
+<td>0.014338</td>
+<td>0.014545</td>
+<td>0.01565</td>
+<td>...</td>
+<td>0.001312</td>
+<td>0.001760</td>
+<td>-0.000022</td>
+<td>0.012203</td>
+<td>-0.004890</td>
+<td>NaN</td>
+<td>0.012134</td>
+<td>0.006734</td>
+<td>0.024929</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>5/1/1959</td>
+<td>0.005796</td>
+<td>0.006618</td>
+<td>0.012043</td>
+<td>0.006839</td>
+<td>0.007803</td>
+<td>0.014955</td>
+<td>0.008270</td>
+<td>0.009582</td>
+<td>0.00477</td>
+<td>...</td>
+<td>-0.001695</td>
+<td>-0.001867</td>
+<td>-0.000021</td>
+<td>-0.004090</td>
+<td>-0.004819</td>
+<td>NaN</td>
+<td>0.002828</td>
+<td>0.002020</td>
+<td>-0.015342</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 128 columns</p>
+</div>
+</div>
+</div>
+</div>
+<div id="a183b938" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>series_to_plot <span class="op">=</span> [<span class="st">'INDPRO'</span>, <span class="st">'CPIAUCSL'</span>, <span class="st">'TB3MS'</span>]</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>series_names <span class="op">=</span> [<span class="st">'Industrial Production'</span>, <span class="st">'Inflation (CPI)'</span>, <span class="st">'Federal Funds Rate'</span>]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 'INDPRO'   for Industrial Production, </span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 'CPIAUCSL' for Inflation (Consumer Price Index), </span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 'TB3MS'    3-month treasury bill.</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.dates <span class="im">as</span> mdates</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a figure and a grid of subplots</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="bu">len</span>(series_to_plot), <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">15</span>))</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Iterate over the selected series and plot each one</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, series_name, plot_title <span class="kw">in</span> <span class="bu">zip</span>(axs, series_to_plot, series_names):</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> series_name <span class="kw">in</span> df_cleaned.columns:</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Convert 'sasdate' to datetime format for plotting</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        dates <span class="op">=</span> pd.to_datetime(df_cleaned[<span class="st">'sasdate'</span>], <span class="bu">format</span><span class="op">=</span><span class="st">'%m/</span><span class="sc">%d</span><span class="st">/%Y'</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        ax.plot(dates, df_cleaned[series_name], label<span class="op">=</span>plot_title)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Formatting the x-axis to show only every five years</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        ax.xaxis.set_major_locator(mdates.YearLocator(base<span class="op">=</span><span class="dv">5</span>))</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>        ax.xaxis.set_major_formatter(mdates.DateFormatter(<span class="st">'%Y'</span>))</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        ax.set_title(plot_title)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>        ax.set_xlabel(<span class="st">'Year'</span>)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>        ax.set_ylabel(<span class="st">'Transformed Value'</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>        ax.legend(loc<span class="op">=</span><span class="st">'upper left'</span>)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Improve layout of date labels</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        plt.setp(ax.xaxis.get_majorticklabels(), rotation<span class="op">=</span><span class="dv">45</span>, ha<span class="op">=</span><span class="st">'right'</span>)</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        ax.set_visible(<span class="va">False</span>)  <span class="co"># Hide plots for which the data is not available</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="comptools_ass1_files/figure-html/cell-5-output-1.png" width="950" height="1430" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="forecasting-in-time-series" class="level2">
+<h2 class="anchored" data-anchor-id="forecasting-in-time-series">Forecasting in Time Series</h2>
+<p>Forecasting in time series analysis involves using historical data to predict future values. The objective is to model the conditional expectation of a time series based on past observations.</p>
+<section id="direct-forecasts" class="level3">
+<h3 class="anchored" data-anchor-id="direct-forecasts">Direct Forecasts</h3>
+<p>Direct forecasting involves modeling the target variable directly at the desired forecast horizon. Unlike iterative approaches, which forecast one step ahead and then use those forecasts as inputs for subsequent steps, direct forecasting directly models the relationship between past observations and future value.</p>
+</section>
+<section id="arx-models" class="level3">
+<h3 class="anchored" data-anchor-id="arx-models">ARX Models</h3>
+<p>Autoregressive Moving Average with Exogenous Inputs (ARMAX) models are a class of univariate time series models that extend ARMA models by incorporating exogenous (independent) variables. These models are formulated as follows:</p>
+<p><span class="math display">\[
+Y_{t+h} = \alpha + \sum_{i=0}^p \phi_i Y_{t-i} + \sum_{k=1}^r \beta_k X_{tk} + \epsilon_{t+h}
+\]</span></p>
+<ul>
+<li><span class="math inline">\(Y_{t+h}\)</span>: The target variable at time (t).</li>
+<li><span class="math inline">\(X_{tk}\)</span>: Exogenous variables that influence (Y_t).</li>
+<li><span class="math inline">\(p\)</span> and <span class="math inline">\(r\)</span>: lags.</li>
+<li><span class="math inline">\(\phi\)</span>, <span class="math inline">\(\theta\)</span>, and <span class="math inline">\(\beta\)</span>: Parameters of the model.</li>
+<li><span class="math inline">\(\epsilon_{t+h}\)</span>: Error term.</li>
+</ul>
+<p>The following code produce <span class="math inline">\(Y_{T+1}\)</span>, the forecast for industrial production for the first period</p>
+<div id="f3e8a130" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> df_cleaned[<span class="st">'INDPRO'</span>].dropna()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_cleaned[[<span class="st">'CPIAUCSL'</span>, <span class="st">'FEDFUNDS'</span>]].dropna()</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> <span class="dv">1</span> <span class="co">## One-step ahead</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="dv">4</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="dv">4</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>Y_target <span class="op">=</span> Y.shift(<span class="op">-</span>h).dropna()</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>Y_lagged <span class="op">=</span> pd.concat([Y.shift(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(p<span class="op">+</span><span class="dv">1</span>)], axis<span class="op">=</span><span class="dv">1</span>).dropna()</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>X_lagged <span class="op">=</span> pd.concat([X.shift(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(r<span class="op">+</span><span class="dv">1</span>)], axis<span class="op">=</span><span class="dv">1</span>).dropna()</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>common_index <span class="op">=</span> Y_lagged.index.intersection(Y_target.index)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>common_index <span class="op">=</span> common_index.intersection(X_lagged.index)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">## This is the last row needed to create the forecast</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>X_T <span class="op">=</span> np.concatenate([[<span class="dv">1</span>], Y_lagged.iloc[<span class="op">-</span><span class="dv">1</span>], X_lagged.iloc[<span class="op">-</span><span class="dv">1</span>]])</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">## Align the data</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>Y_target <span class="op">=</span> Y_target.loc[common_index]</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>Y_lagged <span class="op">=</span> Y_lagged.loc[common_index]</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>X_lagged <span class="op">=</span> X_lagged.loc[common_index]</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>X_reg <span class="op">=</span> pd.concat([X_lagged, Y_lagged], axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy.linalg <span class="im">import</span> solve</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>X_reg <span class="op">=</span> pd.concat([X_lagged, Y_lagged], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>X_reg_np <span class="op">=</span> np.concatenate([np.ones((X_reg.shape[<span class="dv">0</span>], <span class="dv">1</span>)), X_reg.values], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>Y_target_np <span class="op">=</span> Y_target.values</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Solving for the OLS estimator beta: (X'X)^{-1} X'Y</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>beta_ols <span class="op">=</span> solve(X_reg_np.T <span class="op">@</span> X_reg_np, X_reg_np.T <span class="op">@</span> Y_target_np)</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co">## Produce the One step ahead forecast</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="co">## % change month-to-month INDPRO</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>forecast <span class="op">=</span> X_T<span class="op">@</span>beta_ols<span class="op">*</span><span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="forecasting-exercise" class="level3">
+<h3 class="anchored" data-anchor-id="forecasting-exercise">Forecasting Exercise</h3>
+<p>Apply ARX models to forecast:</p>
+<ul>
+<li>Industrial production</li>
+<li>Inflation</li>
+<li>Interest rates</li>
+</ul>
+<p>using the FRED-MD dataset.</p>
+<p>Use expanding windows to evaluate the forecasts using a MSFE loss function. The first window ends on January 8.</p>
+<!-- Initialize an empty list `forecasts` to store forecasted values
+Initialize an empty list `actuals` to store actual values for the forecasted periods
+
+Set the start date to January 2000
+
+While the start date is before December 2023:
+    Set the estimation window to start from the beginning of the dataset up to the current start date
+    
+    Estimate the model using data within the estimation window
+    
+    Set forecast periods to be February, May, and September of the current year if before November, otherwise adjust to the next year's corresponding months
+    
+    For each forecast period:
+        Forecast the variable(s) of interest for the period using the estimated model
+        Store the forecasted values in `forecasts`
+        Store the actual observed values for the same period in `actuals`
+    
+    Increment the start date to the next month (e.g., from January to February 2000)
+    
+Calculate the mean squared forecast error (MSFE) between `forecasts` and `actuals`
+
+Print or return the MSFE -->
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
