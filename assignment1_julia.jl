@@ -97,28 +97,29 @@ plot(p1, p2, layout=(2, 1), size=(800, 600))
 
 # Extract the series and convert them into Float64 if they are not already
 Y = df_cleaned[!, :INDPRO]
-X = Matrix(df_cleaned[!, [:CPIAUCSL, :FEDFUNDS]])
+X = Matrix(df_cleaned[!, [:CPIAUCSL, :TB3MS]])
 
-h = 1 # One-step ahead
-p = 4
-r = 4
+
+num_leads = 1 # One-step ahead
+num_lags = 4
+
 
 # Create lagged versions of Y and X, and handle the dropping of missing values accordingly
 Y_target = lead(Y, 1)
-Y_lagged = hcat([lag(Y, i) for i in 0:p]...)
-X_lagged = hcat([lag(X[:, j], i) for i in 0:r, j in 1:size(X, 2)]...)
+Y_lagged = hcat([lag(Y, i) for i in 0:num_lags]...)
+X_lagged = hcat([lag(X[:, j], i) for j in axes(X, 2) for i in 0:num_lags]...)
+
+## Add column of ones for the constant term
+X = hcat(ones(size(Y_lagged, 1)), Y_lagged, X_lagged)
 
 ## For the forecast last row of the X which will get removed later
-X_T = [1; [Y_lagged X_lagged][end,:]]
+X_T = X[end, :]
 
-Y_reg = Y_target[max(p,r)+1:(end-h)]
-X_reg = hcat(ones(size(Y_reg, 1)), Y_lagged[max(p,r)+1:(end-h),:], X_lagged[max(p,r)+1:(end-h), :])
+y  = Y_target[num_lags+1:(end-num_leads)]
+X_ = X[num_lags+1:(end-num_leads), :]
 
 # OLS estimator using the Normal Equation
-beta_ols = X_reg \ Y_reg
-
-# Preparing the last row for forecast (ensure correct indexing for Julia)
-
+beta_ols = X_ \ y
 
 # Produce the One-step ahead forecast and convert it to percentage
 forecast = (X_T' * beta_ols) * 100

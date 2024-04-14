@@ -60,74 +60,89 @@ for series_name, code in transformation_codes.values:
 
 df_cleaned.head()
 
-## Plot the transformed series
-series_to_plot = ['INDPRO', 'CPIAUCSL', 'TB3MS']
-series_names = ['Industrial Production', 'Inflation (CPI)', 'Federal Funds Rate']
-# 'INDPRO'   for Industrial Production, 
-# 'CPIAUCSL' for Inflation (Consumer Price Index), 
-# 'TB3MS'    3-month treasury bill.
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
+############################################################################################################
+## Plot transformed series
+############################################################################################################
+import matplotlib.pyplot as plt         
+import matplotlib.dates as mdates       
+
+series_to_plot = ['INDPRO', 'CPIAUCSL', 'TB3MS']         
+series_names = ['Industrial Production',                 
+                'Inflation (CPI)',                        
+                '3-month Treasury Bill rate']            
+
 
 # Create a figure and a grid of subplots
-fig, axs = plt.subplots(len(series_to_plot), 1, figsize=(10, 15))
+fig, axs = plt.subplots(len(series_to_plot), 1, figsize=(8, 15))       
 
 # Iterate over the selected series and plot each one
 for ax, series_name, plot_title in zip(axs, series_to_plot, series_names):
-    if series_name in df_cleaned.columns:
-        # Convert 'sasdate' to datetime format for plotting
-        dates = pd.to_datetime(df_cleaned['sasdate'], format='%m/%d/%Y')
-        ax.plot(dates, df_cleaned[series_name], label=plot_title)
-        # Formatting the x-axis to show only every five years
-        ax.xaxis.set_major_locator(mdates.YearLocator(base=5))
-        ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
-        ax.set_title(plot_title)
-        ax.set_xlabel('Year')
-        ax.set_ylabel('Transformed Value')
-        ax.legend(loc='upper left')
-        # Improve layout of date labels
-        plt.setp(ax.xaxis.get_majorticklabels(), rotation=45, ha='right')
+    if series_name in df_cleaned.columns:                                
+        dates = pd.to_datetime(df_cleaned['sasdate'], format='%m/%d/%Y') 
+        ax.plot(dates, df_cleaned[series_name], label=plot_title)        
+        ax.xaxis.set_major_locator(mdates.YearLocator(base=5))           
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))         
+        ax.set_title(plot_title)                                         
+        ax.set_xlabel('Year')                                            
+        ax.set_ylabel('Transformed Value')                               
+        ax.legend(loc='upper left')                                      
+        plt.setp(ax.xaxis.get_majorticklabels(), rotation=45, ha='right') 
     else:
         ax.set_visible(False)  # Hide plots for which the data is not available
 
-plt.tight_layout()
-plt.show()
+plt.tight_layout() 
+plt.show()         
 
-Y = df_cleaned['INDPRO'].dropna()
-X = df_cleaned[['CPIAUCSL', 'FEDFUNDS']].dropna()
+############################################################################################################
+## Create y and X for estimation of parameters
+############################################################################################################
 
-h = 1 ## One-step ahead
-p = 4
-r = 4
+Yraw = df_cleaned['INDPRO']
+Xraw = df_cleaned[['CPIAUCSL', 'TB3MS']]
 
-Y_target = Y.shift(-h).dropna()
-Y_lagged = pd.concat([Y.shift(i) for i in range(p+1)], axis=1).dropna()
-X_lagged = pd.concat([X.shift(i) for i in range(r+1)], axis=1).dropna()
-common_index = Y_lagged.index.intersection(Y_target.index)
-common_index = common_index.intersection(X_lagged.index)
+## Number of lags and leads
+num_lags  = 4  ## this is p
+num_leads = 1  ## this is h
 
-## This is the last row needed to create the forecast
-X_T = np.concatenate([[1], Y_lagged.iloc[-1], X_lagged.iloc[-1]])
+X = pd.DataFrame()
+## Add the lagged values of Y
+col = 'INDPRO'
+for lag in range(0,num_lags+1):
+        # Shift each column in the DataFrame and name it with a lag suffix
+        X[f'{col}_lag{lag}'] = Yraw.shift(lag)
+## Add the lagged values of X
+for col in Xraw.columns:
+    for lag in range(0,num_lags+1):
+        # Shift each column in the DataFrame and name it with a lag suffix
+        X[f'{col}_lag{lag}'] = Xraw[col].shift(lag)
+## Add a column on ones (for the intercept)
+X.insert(0, 'Ones', np.ones(len(X)))
 
-## Align the data
-Y_target = Y_target.loc[common_index]
-Y_lagged = Y_lagged.loc[common_index]
-X_lagged = X_lagged.loc[common_index]
+## X is now a DataFrame with lagged values of Y and X
+X.head()
 
-X_reg = pd.concat([X_lagged, Y_lagged], axis = 1)
-
+## Y is now the leaded target variable
+y = Yraw.shift(-num_leads)
 
 
-X_reg = pd.concat([X_lagged, Y_lagged], axis=1)
-X_reg_np = np.concatenate([np.ones((X_reg.shape[0], 1)), X_reg.values], axis=1)
-Y_target_np = Y_target.values
+############################################################################################################
+## Estimation and forecast
+############################################################################################################
+
+## Save last row of X (converted to numpy)
+X_T = X.iloc[-1:].values
+
+## Subset getting only rows of X and y from p+1 to h-1
+## and convert to numpy array
+y = y.iloc[num_lags:-num_leads].values
+X = X.iloc[num_lags:-num_leads].values
+
+## Import the solve function from numpy.linalg
+from numpy.linalg import solve
 
 # Solving for the OLS estimator beta: (X'X)^{-1} X'Y
-beta_ols = solve(X_reg_np.T @ X_reg_np, X_reg_np.T @ Y_target_np)
+beta_ols = solve(X.T @ X, X.T @ y)
 
 ## Produce the One step ahead forecast
-## % change month-to-month INDPRO
-print(X_T)
+## % change month-to-month of INDPRO
 forecast = X_T@beta_ols*100
-print(forecast)
-print(beta_ols)
